@@ -1,0 +1,17 @@
+BEGIN
+DROP TABLE IF EXISTS userauth 
+
+create table UserAuth
+(
+user_id serial primary key,
+first_name text not null,
+last_name text not null,
+password text not null
+)
+​
+insert into UserAuth (first_name, last_name, password ) 
+values('Kristy', 'tarano', '12345'),
+('Jose', 'Diaz', '12345'),
+('Renad', 'Bader', '12345')
+
+COMMIT;
