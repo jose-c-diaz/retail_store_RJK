@@ -3,7 +3,7 @@ import psycopg2
 conn = psycopg2.connect(
     database="RetailStore",
     user="postgres",
-    password="6108",
+    password="45928",
     host="127.0.0.1",
     port="5432"
 )
@@ -24,7 +24,7 @@ class Customer:
     try:
 
         # This function is suppose to make the user authen table on the PG Database
-        def createCustomerTable(self):
+        def createCustomerTable():
             cursor = conn.cursor()
             cursor.execute(
                 """CREATE TABLE IF NOT EXISTS customers
@@ -45,6 +45,8 @@ class Customer:
             conn.commit()
             cursor.close()
 
+        createCustomerTable()
+
         # This function checks whether the user is an admin or user, and if their account exists
 
         def retrieveCustomerInfo(self, user_id):
@@ -61,6 +63,15 @@ class Customer:
                 print("User does not exist!")
             # else:
             #     print("User does not exist")
+            cursor.close()
+        
+        def insertCustomerInfo(self, userID, fname, lname, phoneNumber, emailAddress, homeAddress, birthday):
+            cursor = conn.cursor()
+            cursor.execute(
+                f"INSERT INTO customers (user_id, fName, lName, phone, email_address, address, Birthday, active) VALUES ('{userID}', '{fname}', '{lname}', '{phoneNumber}','{emailAddress}','{homeAddress}','{birthday}','true')"
+            )
+            conn.commit()
+            print("Customer information saved!")
             cursor.close()
 
     except (Exception, psycopg2.Error):

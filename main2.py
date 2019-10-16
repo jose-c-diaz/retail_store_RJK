@@ -6,6 +6,13 @@ from Customer import Customer
 
 def clear(): return os.system('cls')
 
+def input_valid_name(fieldName):
+    while True:
+        fieldInput = input("Enter your " + fieldName + " >> ")
+        if not fieldInput:
+            print("Invalid " + fieldName + ", try again")
+        else:
+            return fieldInput 
 
 def main():
     clear()
@@ -27,13 +34,25 @@ def main():
 
         print("Succesful log in!")
         customerObj = Customer()
-        Customer.retrieveCustomerInfo(userNameInput)
+        customerObj.retrieveCustomerInfo(userNameInput)
 
     elif answer[:1] == '2':
+
         newUserInput = input("Enter a unique username! >> ")
         newPassInput = getpass.getpass(
             "Enter a password with a minimum length of 15 characters! >> ")
         User_Authintication.insertUserInfo(newUserInput, newPassInput)
+
+        firstNameInput = input_valid_name("first name") 
+        lastNameInput = input_valid_name("last name") 
+        phoneInput = input_valid_name("phone number")
+        emailInput = input_valid_name("email address")
+        addressInput = input_valid_name("home address")
+        birthInput = input_valid_name("birthday")
+
+        customerObj = Customer()
+        customerObj.insertCustomerInfo(newUserInput, firstNameInput, lastNameInput, phoneInput, emailInput, addressInput, birthInput)
+
         userNameInput = input("Enter your username >> ")
         passwordInput = getpass.getpass("Enter your password >> ")
         adminAssign = 'false'
