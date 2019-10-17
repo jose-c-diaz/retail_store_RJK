@@ -20,7 +20,7 @@ def selectStatment(tableName, WhereStatment):
 # This function to Execute the sql command and return the data set
 
 
-def retreiveDataFromDBTables(selectStatment):
+def retreiveDataFromDBTables(sqlStatment):
     try:
         conn = psycopg2.connect(
             database="RetailStore",
@@ -29,51 +29,22 @@ def retreiveDataFromDBTables(selectStatment):
             host="127.0.0.1",
             port="5432"
         )
+        cursor = conn.cursor()
+        cursor.execute(sqlStatment)
+        conn.commit()
+        # cursor.close()
+        return cursor
+
     except(Exception, psycopg2.Error)as err:
-        print("Error while fetching data from PostgreSQL", err)
-
-    cursor = conn.cursor()
-    cursor.execute(selectStatment)
-    rows = cursor.fetchall()
-    cursor.close()
-    return rows
+        clear()
+        print("Error:", err)
 
 
-def selectSpesificRealState(realStateID, sellOrBuy):
-    try:
-        conn = psycopg2.connect(
-            database="Real_Investments",
-            user="postgres",
-            password="6108",
-            host="127.0.0.1",
-            port="5432"
-        )
-    except(Exception, psycopg2.Error)as err:
-        print("Error while fetching data from PostgreSQL", err)
-
-        # Retrive real state data from database
-    cursor = conn.cursor()
-    cursor.execute(
-        f"select * from real_state where real_state_id='{realStateID}'")
-    rows = cursor.fetchall()
-    if(rows):
-
-        for row in rows:
-
-            house.real_state_id = row[0]
-            house.real_state_name = row[1]
-            house.real_state_address = row[3]
-            house.no_of_bedrooms = row[5]
-            house.no_of_bathrooms = row[6]
-            house.floor_space = row[7]
-            house.price = row[8]
-            house.real_state_Desc = row[2]
-
-        cursor.close()
-        if(sellOrBuy == 1):
-            house.SellRealState(house.price)
-        else:
-            house.BuyRealState(house.price)
+def addNewCategory(CategoryName):
+    insertstatment = f"INSERT INTO categories (category_name) VALUES ('{CategoryName}')"
+    result = retreiveDataFromDBTables(insertstatment)
+    if(result):
+        print(f"\n\n{CategoryName} is successfully added to the system!")
 
 
 def main():
@@ -97,30 +68,57 @@ def main():
         print("---------------------- WELCOME TO OUR ONLINE RETAIL STORE ----------------------")
         print("\n\n")
 
-        print("                       ~~ MAIN MENUE ~~\n\n")
-
-        print("                       1- Manage Categories")
-        print("                       2- Manage Products")
-        print("                       3- Manage Customers\n")
-        answer = int(input("Please choose your option [1-3] >>"))
-        clear()
-
         if answer[:1] == '1':
-            print("Search Categories by CATEGORY NAME")
-            SearchKeyWord = input("What you looking for? >>")
-            SQLStatment = selectStatment(
-                "categories", "LOWER(category_name) LIKE '" + SearchKeyWord + "%'")
-            rows = retreiveDataFromDBTables(SQLStatment)
+            print("                   ~~ Administration MAIN MENUE ~~\n\n")
 
-            # Retrive real state data from database
-            print("-------------------------------------------------------------:")
-            print("---------------------- Categories List ----------------------")
-            ProductCategory = Category()
+            print("                       1- Manage Categories")
+            print("                       2- Manage Products")
+            print("                       3- Manage Customers\n")
+            manageGRP = input("Please choose your option [1-3] >>")
 
-            if(rows):
-                ProductCategoryList = rows
-                for row in rows:
-                    print(f"{row[0]} - {row[1]} ")
+            if manageGRP[:1] == '1':
+                clear()
+                print("                    ***** Manage Categories *****\n\n")
+                print("                       1- Add a new category")
+                print("                       2- Edit existing category")
+                print("                       3- Remove existing category\n")
+                categoryOperation = input("Please choose your option [1-3] >>")
+
+                if categoryOperation[:1] == '1':
+                    categoryName = input(
+                        "Please enter the Category name that you want to add >>")
+                    cursor = addNewCategory(categoryName)
+
+                elif categoryOperation[:1] == '2':
+
+                    print("Search Categories by CATEGORY NAME")
+                    SearchKeyWord = str.lower(
+                        input("What you looking for? >>"))
+                    SQLStatment = selectStatment(
+                        "categories", "LOWER(category_name) LIKE '" + SearchKeyWord + "%' ORDER BY category_name ASC")
+                    cursor = retreiveDataFromDBTables(SQLStatment)
+                    rows = cursor.fetchall()
+                    cursor.close()
+                    clear()
+                    # Retrive real state data from database
+                    print(
+                        "-------------------------------------------------------------:")
+                    print(
+                        "---------------------- Categories List ----------------------")
+                    ProductCategory = Category()
+
+                    if(rows):
+                        ProductCategoryList = rows
+                        counter = 0
+                        for row in rows:
+                            print(f"{row[0]} - {row[1]} ")
+                            counter += 1
+
+                elif categoryOperation[:1] == '3':
+
+                    print("Invalid entry\n")
+                else:
+                    print("Invalid entry\n")
 
         elif answer[:1] == '2':
             # retreiveAllRealStates()
