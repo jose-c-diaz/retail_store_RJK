@@ -1,16 +1,20 @@
+
+
 -- This creates the Customer table
 CREATE TABLE customers
 (
-    CID SERIAL PRIMARY KEY,
-	user_Name text NOT NULL,
+	CID SERIAL PRIMARY KEY,
+	user_Name text,
     fName text NOT NULL,
     lName text NOT NULL,
 	phone text NOT NULL,
 	emailaddress text NOT NULL,
 	Address text NOT NULL,
 	active boolean  NOT NULL,
-	Birthday date
-);
+	Birthday date,
+	FOREIGN KEY (user_Name) REFERENCES user_authentication(user_Name)
+
+)
 
 select * from customers
 ----------------------------------------------------
@@ -64,8 +68,33 @@ CREATE TABLE employees
 select * from employees
 INSERT INTO employees (emp_id, user_name, employee_fname, employee_lname, phone, email_address, address, active, Birthday)
 VALUES 
-(1, 'rbader', 'Renad', 'Bader', '786-569-3906', 'rinad.bader@gmail.com','11143 w biscayne canal rd, miami, fl', TRUE, '01/04/1990' )
+(1, 'rbader', 'Renad', 'Bader', '786-569-3906', 'rinad.bader@gmail.com','11143 w biscayne canal rd, miami, fl', TRUE, '01/04/1990' ),
+(2, 'ktara005', 'Kristy', 'Tarano', '786-853-4352', 'kristytarano@gmail.com', '16420 nw 91 ct Miami, FL', 'TRUE', '01/05/1996')
 ----------------------------------------------------------------------------------------------
 
 
+CREATE TABLE IF NOT EXISTS user_authentication
+(
+user_id SERIAL PRIMARY KEY,
+user_Name TEXT NOT NULL,
+pass_word TEXT NOT NULL,
+admin_role BOOLEAN NOT NULL
+)
 
+SELECT * FROM user_authentication
+INSERT INTO user_authentication (user_name, pass_word, admin_role) --VALUES ()"
+
+
+
+______________________________________________________
+
+--order table
+
+CREATE TABLE IF NOT EXISTS order_table
+(
+CID serial NOT NULL,
+order_id serial PRIMARY KEY,
+order_date date,
+order_total money NOT NULL,
+FOREIGN KEY (CID) REFERENCES customers(CID)	
+)
