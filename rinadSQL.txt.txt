@@ -1,0 +1,131 @@
+
+
+-- This creates the Customer table
+
+CREATE TABLE customers
+(
+    custome_ID SERIAL PRIMARY KEY,
+	user_id serial NOT NULL,
+    first_Name text NOT NULL,
+    last_Name text NOT NULL,
+	phone text NOT NULL,
+	email_address text NOT NULL,
+	home_address text NOT NULL,
+	active boolean  NOT NULL,
+	birthday date
+
+);
+
+
+
+select * from customers
+
+----------------------------------------------------
+
+-- This creates the categories table
+
+CREATE TABLE categories
+
+(
+    category_id SERIAL PRIMARY KEY, 
+    category_name text NOT NULL
+);
+
+
+
+select * from categories 
+
+where LOWER(category_name) LIKE 'me%'
+
+-- This inserts into categories table 
+
+INSERT INTO categories (category_name)
+VALUES ('test')
+--to return id for my code 
+RETURNING category_id
+
+(2, 'Women')
+
+-------------------------------------------------------
+--update categories table
+UPDATE categories SET category_name=LOWER('{categoryNewName}') WHERE category_id={categoryNo}"
+
+
+-- This creates the products table
+
+CREATE TABLE products
+(
+    product_id SERIAL PRIMARY KEY, 
+	category_id SERIAL NOT NULL,
+    product_name text NOT NULL,
+	product_desciption text NOT NULL,
+	product_price Decimal(19,4) NOT NULL,
+	FOREIGN KEY (category_id) REFERENCES categories(category_id)
+);
+--ALTER TABLE products ALTER COLUMN product_price decimal(25, 0);
+	
+SELECT category_id FROM products
+GROUP BY category_id
+------------------------
+SELECT c1.category_id, c1.category_name as category_Name , c2.product_id, c2.product_name, c2.product_desciption, c2.product_price 
+FROM categories c1
+JOIN products c2
+    ON c1.category_id = c2.category_id
+ORDER BY category_Name ASC
+--------------------------
+UPDATE products 
+SET product_name=LOWER('hi'),
+product_desciption='test'
+WHERE product_id=9
+select * from products
+
+-- This inserts into products table
+
+INSERT INTO products(category_id, product_name, product_desciption, product_price)
+VALUES 
+(1, 'Stretch Slim-Fit Straight-Leg Jeans', 'Designed to sit at the waist, these five-pocket jeans from DKNY are enhanced with a touch of stretch so that you can sport the stylish St.', 79.50 ),
+(1,'Colorblocked Jersey', 'A contrast logo and broad stripe at the front update this jersey from Puma.', 40.00 ),
+(2,'MICHAEL Michael Kors-Asymmetrical Belted Coat', 'Wrap up your look in the modern asymmetrical styling of this belted coat from Michael Michael Kors.', 300.00  )
+
+---------------------------------------------------------------
+
+
+
+-- This creates the Employees table
+
+CREATE TABLE employees
+
+(
+
+    emp_id SERIAL PRIMARY KEY,
+
+	user_name text NOT NULL,
+
+	employee_fname text NOT NULL,
+
+    employee_lname text NOT NULL,
+
+   	phone text NOT NULL,
+
+	email_address text NOT NULL,
+
+	address text NOT NULL,
+
+	active boolean  NOT NULL,
+
+	Birthday date
+
+);
+
+
+
+select * from employees
+
+INSERT INTO employees (emp_id, user_name, employee_fname, employee_lname, phone, email_address, address, active, Birthday)
+
+VALUES 
+
+(1, 'rbader', 'Renad', 'Bader', '786-569-3906', 'rinad.bader@gmail.com','11143 w biscayne canal rd, miami, fl', TRUE, '01/04/1990' )
+
+----------------------------------------------------------------------------------------------
+
